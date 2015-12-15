@@ -64,26 +64,41 @@ namespace MusicBeePlugin
 			switch (messageType)
 			{
 				case MetadataType.TrackTitle:
-					return GetFirstAvailableTag(MetaDataType.TrackTitle);
+					return GetFirstAvailableTag(MetaDataType.TrackTitle) 
+						// This is a little hack to get Airfoil to requery the album art once it's been downloaded.
+						// Airfoil appears to poll for the basic metadata at a regular interval, and only if that's 
+						// changed does it ask for the artwork. So we send a slightly different track title depending
+						// on if the artwork is present or not, and should that change, Airfoil will re-ask for the art.
+						+ (HasArtwork() ? "" : " ");
 				case MetadataType.TrackArtist:
 					// Usually Artist should suffice here, but try a couple backups just in case.
 					return GetFirstAvailableTag(MetaDataType.Artist, MetaDataType.PrimaryArtist, MetaDataType.AlbumArtist);
 				case MetadataType.TrackAlbum:
 					return GetFirstAvailableTag(MetaDataType.Album);
 				case MetadataType.AlbumArt:
-					// Start by checking for local album art.
-					String artwork = mbApiInterface.NowPlaying_GetArtwork();
-					// If that missed, then see if MusicBee has downloaded anything.
-					// If THAT missed, then we'll send no artwork back.
-					// There's unfortunately no way to initiate a message to Airfoil, so the approach of waiting to be notified about
-					// the artwork download completing won't work.
-					if (String.IsNullOrEmpty(artwork))
-					{
-						artwork = mbApiInterface.NowPlaying_GetDownloadedArtwork();
-					}
-					return artwork;
+					return GetArtwork();
 			}
 			return "";
+		}
+
+		protected bool HasArtwork()
+		{
+			return !String.IsNullOrEmpty(GetArtwork());
+		}
+
+		protected String GetArtwork()
+		{
+			// Start by checking for local album art.
+			String artwork = mbApiInterface.NowPlaying_GetArtwork();
+			// If that missed, then see if MusicBee has downloaded anything.
+			// If THAT missed, then we'll send no artwork back.
+			// There's unfortunately no way to initiate a message to Airfoil, so the approach of waiting to be notified about
+			// the artwork download completing won't work.
+			if (String.IsNullOrEmpty(artwork))
+			{
+				artwork = mbApiInterface.NowPlaying_GetDownloadedArtwork();
+			}
+			return artwork;
 		}
 
 		/// <summary>
