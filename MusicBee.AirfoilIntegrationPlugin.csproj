@@ -70,8 +70,8 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AirfoilMetadataAgent, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\AirfoilMetadataAgent.1.0.0.0\lib\net40\AirfoilMetadataAgent.dll</HintPath>
+    <Reference Include="AirfoilMetadataAgent, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AirfoilMetadataAgent.1.0.1.0\lib\net40\AirfoilMetadataAgent.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
